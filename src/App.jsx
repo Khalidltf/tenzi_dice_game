@@ -1,35 +1,128 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, useState } from "react";
+import { nanoid } from "nanoid";
+import useWindowSize from "react-use/lib/useWindowSize";
+import Confetti from "react-confetti";
+import Die from "./components/Die";
+import "./App.scss";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [state, setState] = useState(randomNum());
+  const [tenzies, setTenzies] = useState(false);
+  const { width, height } = useWindowSize();
+
+  useEffect(() => {
+    function findNum(d) {
+      return d.isHeld === true; // Condition to find the element
+    }
+
+    const foundElement = state.find(findNum);
+
+    if (foundElement) {
+      const value = foundElement.value;
+      console.log(value);
+      if (
+        state.every((el) => el.isHeld) &&
+        state.every((el) => el.value === value)
+      ) {
+        setTenzies(true);
+        // alert("Won the Game");
+      }
+    } else {
+      console.log("No matching element found.");
+    }
+  }, [state]);
+
+  function randomNum() {
+    let arr = [];
+    for (let i = 0; i < 10; i++) {
+      let num = Math.ceil(Math.random() * 6);
+      arr.unshift({ id: nanoid(), value: num, isHeld: false });
+    }
+
+    return arr;
+  }
+
+  function handleChange() {
+    const frs = state.map((el) => {
+      const n = Math.ceil(Math.random() * 6);
+      return el.isHeld === false ? { ...el, value: n } : el;
+    });
+
+    // console.log(frs);
+    setState(frs);
+  }
+
+  function handleBackground(id) {
+    const newArr = state.map((el) => {
+      return el.id === id
+        ? {
+            ...el,
+            isHeld: !el.isHeld,
+          }
+        : el;
+      // if (el.id === id) {
+      //   return {
+      //     ...el,
+      //     isHeld: !el.isHeld,
+      //   };
+      // } else {
+      //   return el;
+      // }
+    });
+    setState(newArr);
+  }
+
+  const items = state.map((item) => (
+    <>
+      <Die
+        key={item.id}
+        value={item.value}
+        getItem={() => handleBackground(item.id)}
+        isHeld={item.isHeld}
+      />
+    </>
+  ));
+
+  // useEffect(() => {
+  //   let a = JSON.stringify(state.filter((el) => el.isHeld === true));
+  //   localStorage.setItem("nums", a);
+  // }, [state]);
+
+  function handleGame() {
+    setTenzies(false);
+
+    const play = state.map((el) => {
+      const n = Math.ceil(Math.random() * 6);
+      return { ...el, value: n, isHeld: false };
+    });
+
+    setState(play);
+  }
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <main className="container">
+        {tenzies && <Confetti width={width} height={height} />}
+        <div className="game__board">
+          <h1 className="title">Tenzies</h1>
+          <p className="instructions">
+            Roll until all dice are the same. Click each die to freeze it at its
+            current value between rolls.
+          </p>
+          <div className="dice__container">{items}</div>
+          {tenzies ? (
+            <button onClick={handleGame} className="roll__btn">
+              play
+            </button>
+          ) : (
+            <button onClick={handleChange} className="roll__btn">
+              roll
+            </button>
+          )}
+        </div>
+      </main>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
