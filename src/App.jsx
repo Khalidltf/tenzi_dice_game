@@ -25,7 +25,6 @@ function App() {
         state.every((el) => el.value === value)
       ) {
         setTenzies(true);
-        // alert("Won the Game");
       }
     } else {
       console.log("No matching element found.");
@@ -48,7 +47,6 @@ function App() {
       return el.isHeld === false ? { ...el, value: n } : el;
     });
 
-    // console.log(frs);
     setState(frs);
   }
 
@@ -60,14 +58,6 @@ function App() {
             isHeld: !el.isHeld,
           }
         : el;
-      // if (el.id === id) {
-      //   return {
-      //     ...el,
-      //     isHeld: !el.isHeld,
-      //   };
-      // } else {
-      //   return el;
-      // }
     });
     setState(newArr);
   }
