@@ -19,7 +19,6 @@ function App() {
 
     if (foundElement) {
       const value = foundElement.value;
-      console.log(value);
       if (
         state.every((el) => el.isHeld) &&
         state.every((el) => el.value === value)
@@ -47,6 +46,7 @@ function App() {
       return el.isHeld === false ? { ...el, value: n } : el;
     });
 
+    console.log(frs);
     setState(frs);
   }
 
@@ -72,11 +72,6 @@ function App() {
       />
     </>
   ));
-
-  // useEffect(() => {
-  //   let a = JSON.stringify(state.filter((el) => el.isHeld === true));
-  //   localStorage.setItem("nums", a);
-  // }, [state]);
 
   function handleGame() {
     setTenzies(false);
