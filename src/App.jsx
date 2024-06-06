@@ -8,6 +8,7 @@ import "./App.scss";
 function App() {
   const [state, setState] = useState(randomNum());
   const [tenzies, setTenzies] = useState(false);
+  const [numberOfRolls, setNumberOfRolls] = useState(0);
   const { width, height } = useWindowSize();
 
   useEffect(() => {
@@ -46,7 +47,7 @@ function App() {
       return el.isHeld === false ? { ...el, value: n } : el;
     });
 
-    console.log(frs);
+    setNumberOfRolls((prevNum) => prevNum + 1);
     setState(frs);
   }
 
@@ -101,7 +102,7 @@ function App() {
             </button>
           ) : (
             <button onClick={handleChange} className="roll__btn">
-              roll
+              {numberOfRolls === 1 ? " 1 roll" : numberOfRolls + " rolls"}
             </button>
           )}
         </div>
