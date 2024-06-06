@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useStopwatch } from "react-timer-hook";
 import { nanoid } from "nanoid";
 import useWindowSize from "react-use/lib/useWindowSize";
 import Confetti from "react-confetti";
@@ -10,6 +11,15 @@ function App() {
   const [tenzies, setTenzies] = useState(false);
   const [numberOfRolls, setNumberOfRolls] = useState(0);
   const { width, height } = useWindowSize();
+  const [bestScore, setBestScore] = useState(() => {
+    return localStorage.getItem("totalSeconds") || 0;
+  });
+
+  const { seconds, minutes, pause, reset, totalSeconds } = useStopwatch({
+    autoStart: true,
+  });
+  const secondTime = seconds < 10 ? `0${seconds}` : `${seconds}`;
+  const minuteTime = minutes < 10 ? `0${minutes}` : `${minutes}`;
 
   useEffect(() => {
     function findNum(d) {
@@ -24,6 +34,8 @@ function App() {
         state.every((el) => el.isHeld) &&
         state.every((el) => el.value === value)
       ) {
+        pause();
+        localStorage.setItem("totalSeconds", totalSeconds);
         setTenzies(true);
       }
     } else {
@@ -75,6 +87,8 @@ function App() {
   ));
 
   function handleGame() {
+    reset();
+    setNumberOfRolls(0);
     setTenzies(false);
 
     const play = state.map((el) => {
@@ -87,6 +101,15 @@ function App() {
 
   return (
     <>
+      <div className="score">
+        {tenzies ? (
+          <p>Best Score {bestScore}</p>
+        ) : (
+          <p>
+            Time {minuteTime}:{secondTime}
+          </p>
+        )}
+      </div>
       <main className="container">
         {tenzies && <Confetti width={width} height={height} />}
         <div className="game__board">
