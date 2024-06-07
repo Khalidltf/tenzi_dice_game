@@ -4,6 +4,7 @@ import { nanoid } from "nanoid";
 import useWindowSize from "react-use/lib/useWindowSize";
 import Confetti from "react-confetti";
 import Die from "./components/Die";
+import { formatTime } from "./utils/format-time";
 import "./App.scss";
 
 function App() {
@@ -11,9 +12,6 @@ function App() {
   const [tenzies, setTenzies] = useState(false);
   const [numberOfRolls, setNumberOfRolls] = useState(0);
   const { width, height } = useWindowSize();
-  const [bestScore, setBestScore] = useState(() => {
-    return localStorage.getItem("totalSeconds") || 0;
-  });
 
   const { seconds, minutes, pause, reset, totalSeconds } = useStopwatch({
     autoStart: true,
@@ -35,13 +33,25 @@ function App() {
         state.every((el) => el.value === value)
       ) {
         pause();
-        localStorage.setItem("totalSeconds", totalSeconds);
         setTenzies(true);
+        saveBestScore(totalSeconds);
       }
     } else {
       console.log("No matching element found.");
     }
-  }, [state]);
+  }, [state, totalSeconds]);
+
+  // If score is nothing, then just print the new score.
+  // If the score is better than the current printed score, then print that one instead.
+  // If the score isn't as good as the current score, then don't do anything at all.
+
+  // Function to save the best score to localStorage
+  function saveBestScore(currentScore) {
+    const bestScore = localStorage.getItem("bestScore");
+    if (!bestScore || currentScore < bestScore) {
+      localStorage.setItem("bestScore", currentScore);
+    }
+  }
 
   function randomNum() {
     let arr = [];
@@ -102,11 +112,15 @@ function App() {
   return (
     <>
       <div className="score">
-        {tenzies ? (
-          <p>Best Score {bestScore}</p>
-        ) : (
+        <p>
+          time {minuteTime}:{secondTime}
+        </p>
+        {tenzies && (
           <p>
-            Time {minuteTime}:{secondTime}
+            best time{" "}
+            {localStorage.getItem("bestScore")
+              ? formatTime(localStorage.getItem("bestScore"))
+              : "00:00"}
           </p>
         )}
       </div>
