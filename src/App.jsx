@@ -39,11 +39,8 @@ function App() {
     } else {
       console.log("No matching element found.");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state, totalSeconds]);
-
-  // If score is nothing, then just print the new score.
-  // If the score is better than the current printed score, then print that one instead.
-  // If the score isn't as good as the current score, then don't do anything at all.
 
   function randomNum() {
     let arr = [];
