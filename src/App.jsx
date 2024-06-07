@@ -4,7 +4,7 @@ import { nanoid } from "nanoid";
 import useWindowSize from "react-use/lib/useWindowSize";
 import Confetti from "react-confetti";
 import Die from "./components/Die";
-import { formatTime } from "./utils/format-time";
+import { formatTime, saveBestScore } from "./utils";
 import "./App.scss";
 
 function App() {
@@ -44,14 +44,6 @@ function App() {
   // If score is nothing, then just print the new score.
   // If the score is better than the current printed score, then print that one instead.
   // If the score isn't as good as the current score, then don't do anything at all.
-
-  // Function to save the best score to localStorage
-  function saveBestScore(currentScore) {
-    const bestScore = localStorage.getItem("bestScore");
-    if (!bestScore || currentScore < bestScore) {
-      localStorage.setItem("bestScore", currentScore);
-    }
-  }
 
   function randomNum() {
     let arr = [];
@@ -113,16 +105,15 @@ function App() {
     <>
       <div className="score">
         <p>
-          time {minuteTime}:{secondTime}
+          TIME {minuteTime}:{secondTime}
         </p>
-        {tenzies && (
-          <p>
-            best time{" "}
-            {localStorage.getItem("bestScore")
-              ? formatTime(localStorage.getItem("bestScore"))
-              : "00:00"}
-          </p>
-        )}
+        {" / "}
+        <p>
+          B. SCORE{" "}
+          {localStorage.getItem("bestScore")
+            ? formatTime(localStorage.getItem("bestScore"))
+            : "00:00"}
+        </p>
       </div>
       <main className="container">
         {tenzies && <Confetti width={width} height={height} />}
