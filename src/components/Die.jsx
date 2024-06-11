@@ -35,7 +35,7 @@ export default function Die({ value, getItem, isHeld }) {
       className="die"
       onClick={getItem}
       style={{
-        color: isHeld ? "rgb(222, 255, 174)" : "rgba(0, 0, 0, 0.1)",
+        color: isHeld ? "#ed9c93" : "rgba(0, 0, 0, 0.1)",
       }}
     >
       {imageDice}

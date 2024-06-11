@@ -102,11 +102,11 @@ function App() {
     <>
       <div className="score">
         <p>
-          TIME {minuteTime}:{secondTime}
+          Time {minuteTime}:{secondTime}
         </p>
-        {" / "}
+        {" - "}
         <p>
-          B. SCORE{" "}
+          Score&nbsp;
           {localStorage.getItem("bestScore")
             ? formatTime(localStorage.getItem("bestScore"))
             : "00:00"}
