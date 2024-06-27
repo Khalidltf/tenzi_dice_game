@@ -101,16 +101,20 @@ function App() {
   return (
     <>
       <div className="score">
-        <p>
-          Time {minuteTime}:{secondTime}
-        </p>
-        {" - "}
-        <p>
-          Score&nbsp;
-          {localStorage.getItem("bestScore")
-            ? formatTime(localStorage.getItem("bestScore"))
-            : "00:00"}
-        </p>
+        {!tenzies && (
+          <p>
+            Time {minuteTime}:{secondTime}
+          </p>
+        )}
+
+        {tenzies && (
+          <p>
+            Best score&nbsp;
+            {localStorage.getItem("bestScore")
+              ? formatTime(localStorage.getItem("bestScore"))
+              : "00:00"}
+          </p>
+        )}
       </div>
       <main className="container">
         {tenzies && <Confetti width={width} height={height} />}
@@ -127,7 +131,11 @@ function App() {
             </button>
           ) : (
             <button onClick={handleChange} className="roll__btn">
-              {numberOfRolls === 1 ? " 1 roll" : numberOfRolls + " rolls"}
+              {numberOfRolls === 1
+                ? " 01 roll"
+                : numberOfRolls < 10
+                ? `0${numberOfRolls}` + " rolls"
+                : numberOfRolls + " rolls"}
             </button>
           )}
         </div>
